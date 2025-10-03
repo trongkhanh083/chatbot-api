@@ -940,8 +940,8 @@
             
             await testRetrievalEndpoint('/retrieval/filter', { 
                 query, 
-                department: department || null,
-                doc_type: docType || null
+                department: department,
+                doc_type: docType
             }, 'Filtered Retrieval');
         }
 
