@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 NeuraSearch AI</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --secondary-color: #06b6d4;
+            --accent-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: #1e293b;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 380px;
+            grid-template-rows: 70px 1fr;
+            grid-template-areas: 
+                "header header header"
+                "sidebar main tools";
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "header"
+                    "main"
+                    "tools";
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
+        /* Header */
+        .header {
+            grid-area: header;
+            background: var(--bg-gradient);
+            color: white;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            grid-area: sidebar;
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.25rem;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .thread-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
+        }
+
+        .thread-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .thread-item.active {
+            background: var(--primary-color);
+        }
+
+        .thread-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        /* Main Chat Area */
+        .main {
+            grid-area: main;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: #fafbfc;
+            max-height: calc(100vh - 200px);
+            min-height: 400px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .message {
+            margin-bottom: 1.25rem;
+            max-width: 85%;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            margin-left: auto;
+        }
+
+        .message-bubble {
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-message .message-bubble {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .assistant-message .message-bubble {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 6px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .user-message .message-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .chat-input-container {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            background: white;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            resize: none;
+            min-height: 60px;
+            max-height: 120px;
+            transition: all 0.2s;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .send-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Tools Panel */
+        .tools-panel {
+            grid-area: tools;
+            background: white;
+            border-left: 1px solid var(--border-color);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .tools-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tools-header h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tools-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+        }
+
+        .filter-card h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        .action-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .results-panel {
+            margin-top: 1.5rem;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1rem;
+        }
+
+        .results-content {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-badge {
+            background: #f1f5f9;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            max-width: 120px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-light);
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { 
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Utility Classes */
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-semibold { font-weight: 600; }
+        .text-center { text-align: center; }
+        .w-full { width: 100%; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <span>NeuraSearch AI</span>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>System Online</span>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>Conversation Threads</h3>
+                <div class="thread-item active">
+                    <div class="thread-icon">💬</div>
+                    <div>
+                        <div class="font-semibold">Current Session</div>
+                        <div class="text-xs text-light" id="currentThreadDisplay">thread_1738412345</div>
+                    </div>
+                </div>
+                <div class="thread-item">
+                    <div class="thread-icon">📚</div>
+                    <div>
+                        <div class="font-semibold">Research</div>
+                        <div class="text-xs text-light">2 hours ago</div>
+                    </div>
+                </div>
+                <div class="thread-item">
+                    <div class="thread-icon">🔧</div>
+                    <div>
+                        <div class="font-semibold">Technical</div>
+                        <div class="text-xs text-light">1 day ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Quick Actions</h3>
+                <button class="btn btn-outline w-full" onclick="createNewThread()">
+                    <span>🆕</span> New Thread
+                </button>
+                <br>
+                <button class="btn btn-outline w-full" onclick="exportConversation()">
+                    <span>📤</span> Export Chat
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main">
+            <div class="chat-header">
+                <h2>AI Assistant</h2>
+                <div class="chat-controls">
+                    <button class="btn btn-outline" onclick="clearConversation()">
+                        <span>🗑️</span> Clear Chat
+                    </button>
+                    <button class="btn btn-primary" onclick="toggleTools()">
+                        <span>🔧</span> Tools
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatbox">
+                    <div class="message assistant-message">
+                        <div class="message-bubble">
+                            <div class="message-header">
+                                <span>🤖</span>
+                                <span>NeuraSearch AI</span>
+                            </div>
+                            Welcome to NeuraSearch AI! I'm here to help you find information and answer questions using our intelligent document retrieval system.
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-group">
+                        <textarea 
+                            class="message-input" 
+                            id="message" 
+                            placeholder="Ask me anything..."
+                            rows="1"
+                        ></textarea>
+                        <button class="send-btn" id="send-btn" onclick="sendMessage()">
+                            <span>↑</span>
+                        </button>
+                    </div>
+                    <div class="text-xs text-light" style="margin-top: 0.5rem;">
+                        Thread ID: <strong id="threadIdDisplay">thread_1738412345</strong>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Tools Panel -->
+        <aside class="tools-panel" id="toolsPanel">
+            <div class="tools-header">
+                <span>⚡</span>
+                <h3>Retrieval Tools</h3>
+            </div>
+
+            <div class="tools-grid">
+                <div class="filter-card">
+                    <h4>🔍 Search Filters</h4>
+                    <div class="filter-row">
+                        <select class="select" id="department">
+                            <option value="">Department</option>
+                            <option value="AI Research">AI Research</option>
+                            <option value="ML Engineering">ML Engineering</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Product">Product</option>
+                            <option value="Engineering">Engineering</option>
+                        </select>
+                        <select class="select" id="docType">
+                            <option value="">Document Type</option>
+                            <option value="Research Paper">Research Paper</option>
+                            <option value="Technical Guide">Technical Guide</option>
+                            <option value="API Documentation">API Documentation</option>
+                            <option value="Best Practices">Best Practices</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-grid">
+                    <button class="action-btn" onclick="testBasicRetrieval()">
+                        <span>🔍</span>
+                        <div>
+                            <div>Basic Retrieval</div>
+                            <div class="text-xs text-light">Simple document search</div>
+                        </div>
+                    </button>
+                    <button class="action-btn" onclick="testFilteredRetrieval()">
+                        <span>🎯</span>
+                        <div>
+                            <div>Filtered Retrieval</div>
+                            <div class="text-xs text-light">With department & type filters</div>
+                        </div>
+                    </button>
+                    <button class="action-btn" onclick="testEnhancedRetrieval()">
+                        <span>⚡</span>
+                        <div>
+                            <div>Enhanced Retrieval</div>
+                            <div class="text-xs text-light">AI-powered filter extraction</div>
+                        </div>
+                    </button>
+                    <button class="action-btn" onclick="analyzeQueryFilters()">
+                        <span>📊</span>
+                        <div>
+                            <div>Analyze Query</div>
+                            <div class="text-xs text-light">Extract potential filters</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <div class="results-header">
+                    <h4>📋 Results</h4>
+                </div>
+                <div class="results-content" id="retrievalResults">
+                    <div class="text-center text-light">
+                        <p>Run a retrieval test to see results here</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        
+        // DOM elements
+        const chatbox = document.getElementById('chatbox');
+        const messageInput = document.getElementById('message');
+        const sendBtn = document.getElementById('send-btn');
+        const retrievalResults = document.getElementById('retrievalResults');
+        const departmentSelect = document.getElementById('department');
+        const docTypeSelect = document.getElementById('docType');
+        const threadIdDisplay = document.getElementById('threadIdDisplay');
+        const currentThreadDisplay = document.getElementById('currentThreadDisplay');
+        const toolsPanel = document.getElementById('toolsPanel');
+
+        // Initialize
+        function init() {
+            generateThreadId();
+            messageInput.focus();
+            autoResizeTextarea();
+        }
+
+        // Thread Management
+        function generateThreadId() {
+            const threadId = 'thread_' + Date.now();
+            threadIdDisplay.textContent = threadId;
+            currentThreadDisplay.textContent = threadId;
+            return threadId;
+        }
+
+        function createNewThread() {
+            const newThreadId = generateThreadId();
+            chatbox.innerHTML = `
+                <div class="message assistant-message">
+                    <div class="message-bubble">
+                        <div class="message-header">
+                            <span>🤖</span>
+                            <span>NeuraSearch AI</span>
+                        </div>
+                        Started new conversation thread. How can I help you today?
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // UI Functions
+        function toggleTools() {
+            toolsPanel.classList.toggle('hidden');
+        }
+
+        function autoResizeTextarea() {
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+
+        // Event Listeners
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Chat Functions
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    <div class="message-header">
+                        <span>${sender === 'user' ? '👤' : '🤖'}</span>
+                        <span>${sender === 'user' ? 'You' : 'NeuraSearch AI'}</span>
+                    </div>
+                    ${formatMessage(text)}
+                    <div class="message-time">${timestamp}</div>
+                </div>
+            `;
+            
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function formatMessage(text) {
+            text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: inherit; text-decoration: underline;">$1</a>');
+            text = text.replace(/\n/g, '<br>');
+            return text;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'message assistant-message';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span>🤖</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatbox.appendChild(typingDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) typingIndicator.remove();
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            const threadId = threadIdDisplay.textContent;
+            
+            if (!message) return;
+
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+
+            addMessage('user', message);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            showTypingIndicator();
+
+            try {
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message,
+                        thread_id: threadId
+                    })
+                });
+                
+                const data = await response.json();
+                hideTypingIndicator();
+                addMessage('assistant', data.response);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                hideTypingIndicator();
+                addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+            } finally {
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        async function clearConversation() {
+            const threadId = threadIdDisplay.textContent;
+            const confirmed = confirm(`Clear conversation history for thread "${threadId}"?`);
+            if (!confirmed) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/conversation/${threadId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    chatbox.innerHTML = `
+                        <div class="message assistant-message">
+                            <div class="message-bubble">
+                                <div class="message-header">
+                                    <span>🤖</span>
+                                    <span>NeuraSearch AI</span>
+                                </div>
+                                Conversation history cleared. How can I help you?
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error clearing conversation:', error);
+            }
+        }
+
+        // Retrieval Functions
+        async function testBasicRetrieval() {
+            const query = prompt('Enter search query:') || 'machine learning';
+            await testRetrievalEndpoint('/retrieval', { query }, 'Basic Retrieval');
+        }
+
+        async function testFilteredRetrieval() {
+            const query = prompt('Enter search query:') || 'neural networks';
+            const department = departmentSelect.value;
+            const docType = docTypeSelect.value;
+            
+            await testRetrievalEndpoint('/retrieval/filter', { 
+                query, 
+                department: department || null,
+                doc_type: docType || null
+            }, 'Filtered Retrieval');
+        }
+
+        async function testEnhancedRetrieval() {
+            const query = prompt('Enter search query:') || 'transformer architecture';
+            await testRetrievalEndpoint('/retrieval/enhance', { query }, 'Enhanced Retrieval');
+        }
+
+        async function analyzeQueryFilters() {
+            const query = prompt('Enter query to analyze:') || 'AI research papers from 2023';
+            await testRetrievalEndpoint('/retrieval/analyze', { query }, 'Filter Analysis', 'GET');
+        }
+
+        async function testRetrievalEndpoint(endpoint, data, testName, method = 'POST') {
+            retrievalResults.innerHTML = `<div class="text-center text-light">Testing ${testName}...</div>`;
+            
+            try {
+                let url, options;
+                
+                if (method === 'GET') {
+                    url = `${API_BASE}${endpoint}?query=${encodeURIComponent(data.query)}`;
+                    options = { method, headers: { 'Content-Type': 'application/json' } };
+                } else {
+                    url = `${API_BASE}${endpoint}`;
+                    options = {
+                        method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    };
+                }
+                
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const result = await response.json();
+                displayRetrievalResults(result, testName);
+                
+            } catch (error) {
+                console.error(`Error in ${testName}:`, error);
+                retrievalResults.innerHTML = `
+                    <div class="result-item" style="border-left-color: var(--error-color);">
+                        <strong>Error in ${testName}:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function displayRetrievalResults(result, testName) {
+            let html = `<div class="result-item" style="background: #f0f9ff; border-left-color: var(--primary-color);">
+                <div class="font-semibold">${testName} Results</div>
+                <div class="result-meta">
+                    <span class="result-badge">Query: "${result.query}"</span>
+                </div>
+            </div>`;
+            
+            if (result.success) {
+                if (result.extracted_filters && Object.keys(result.extracted_filters).length > 0) {
+                    html += `<div class="result-item">
+                        <div class="font-semibold">🎯 Extracted Filters</div>`;
+                    for (const [key, value] of Object.entries(result.extracted_filters)) {
+                        html += `<div class="result-meta"><span class="result-badge">${key}: ${value}</span></div>`;
+                    }
+                    html += `</div>`;
+                }
+                
+                if (result.results) {
+                    if (typeof result.results === 'string') {
+                        html += `<div class="result-item">
+                            <div class="font-semibold">📄 Results</div>
+                            <div style="margin-top: 0.5rem;">${formatMessage(result.results)}</div>
+                        </div>`;
+                    } else if (Array.isArray(result.results)) {
+                        result.results.forEach((item, index) => {
+                            html += `<div class="result-item">
+                                <div class="font-semibold">📄 Result ${item.rank || index + 1}</div>
+                                ${formatResultItem(item)}
+                            </div>`;
+                        });
+                    }
+                }
+            } else {
+                html += `<div class="result-item" style="border-left-color: var(--error-color);">
+                    <div class="font-semibold">❌ Failed</div>
+                    <div>Error: ${result.error}</div>
+                </div>`;
+            }
+            
+            retrievalResults.innerHTML = html;
+        }
+
+        function formatResultItem(item) {
+            if (typeof item === 'string') return item;
+            
+            let formatted = '';
+            if (item.content) formatted += `<div style="margin: 0.5rem 0;">${item.content}</div>`;
+            if (item.metadata) {
+                formatted += `<div class="result-meta">`;
+                for (const [key, value] of Object.entries(item.metadata)) {
+                    formatted += `<span class="result-badge">${key}: ${value}</span>`;
+                }
+                formatted += `</div>`;
+            }
+            return formatted;
+        }
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
