@@ -1,0 +1,17 @@
+langchain
+langchain-community
+langchain-openai
+langchain-ollama
+langchain-chroma
+langgraph
+beautifulsoup4
+fastapi
+uvicorn
+jinja2
+chromadb
+wikipedia-api
+faker
+qdrant-client
+langchain-qdrant
+openai
+tiktoken
