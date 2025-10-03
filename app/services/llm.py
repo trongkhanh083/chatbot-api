@@ -1,7 +1,7 @@
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+# from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_mistralai import ChatMistralAI
 from langchain_huggingface import HuggingFaceEmbeddings
-from config.settings import OLLAMA_BASE_URL, LLM_MODEL, EMBEDDING_MODEL, MISTRAL_API_KEY
+from config.settings import MISTRAL_API_KEY
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # )
 
 llm = ChatMistralAI(
-    model=LLM_MODEL,
+    model="mistral-small-2506",
     mistral_api_key=MISTRAL_API_KEY,
     temperature=0.3,
     top_p=0.9
@@ -34,5 +34,5 @@ llm = ChatMistralAI(
 # )
 
 embeddings = HuggingFaceEmbeddings(
-    model_name=EMBEDDING_MODEL
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
