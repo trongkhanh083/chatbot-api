@@ -20,4 +20,5 @@ tiktoken
 sentence-transformers
 transformers
 einops
+pydantic
 torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
