@@ -3,6 +3,8 @@ langchain-community
 langchain-openai
 langchain-ollama
 langchain-chroma
+langchain-huggingface
+langchain-mistralai
 langgraph
 beautifulsoup4
 fastapi
@@ -15,3 +17,5 @@ qdrant-client
 langchain-qdrant
 openai
 tiktoken
+sentence-transformers
+einops

@@ -1,4 +1,4 @@
-from langchain_qdrant import Qdrant
+from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from app.services.llm import embeddings
 from config.settings import QDRANT_URL, QDRANT_API_KEY, QDRANT_COLLECTION_NAME
@@ -35,10 +35,10 @@ def get_qdrant_vector_store():
     try:
         client = get_qdrant_client()
         
-        vector_store = Qdrant(
+        vector_store = QdrantVectorStore(
             client=client,
             collection_name=QDRANT_COLLECTION_NAME,
-            embeddings=embeddings,
+            embedding=embeddings,
         )
         
         # Test the vector store

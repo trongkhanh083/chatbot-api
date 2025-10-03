@@ -1,6 +1,6 @@
 import json
 import os
-from langchain_qdrant import Qdrant
+from langchain_qdrant import QdrantVectorStore
 from langchain_core.documents import Document
 from app.services.llm import embeddings
 from config.settings import QDRANT_URL, QDRANT_API_KEY, QDRANT_COLLECTION_NAME
@@ -42,7 +42,7 @@ def load_documents_from_json(json_file_path):
     print(f"📁 Loaded {len(documents)} documents from {json_file_path}")
     return documents
 
-def create_qdrant_collection(client, collection_name, vector_size=768):
+def create_qdrant_collection(client, collection_name, vector_size=384):
     """Create Qdrant collection if it doesn't exist"""
     try:
         # Get collections
@@ -72,10 +72,10 @@ def upload_documents_to_qdrant(documents, batch_size=50):
     create_qdrant_collection(client, QDRANT_COLLECTION_NAME)
     
     # Initialize Qdrant vector store
-    vector_store = Qdrant(
+    vector_store = QdrantVectorStore(
         client=client,
         collection_name=QDRANT_COLLECTION_NAME,
-        embeddings=embeddings,
+        embedding=embeddings,
     )
     
     print(f"🔄 Uploading {len(documents)} documents to Qdrant...")
