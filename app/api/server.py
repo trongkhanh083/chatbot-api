@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from app.api.endpoints import router as api_router
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Chatbot API", version="1.0.0")
 
@@ -32,3 +33,6 @@ async def root(request: Request):
 @app.get("/health")
 async def health():
     return {"status": "ok", "message": "API is running!"}
+
+# Serve static files (CSS, JS, images, icons)
+app.mount("/static", StaticFiles(directory="static"), name="static")
