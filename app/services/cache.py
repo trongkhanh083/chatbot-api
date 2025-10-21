@@ -1,20 +1,12 @@
-from app.services.qdrant_store import qdrant_vector_store as vector_store
-from functools import lru_cache
 import hashlib
 import time
+from functools import lru_cache
+from typing import Dict, Any, List
 
-try:
-    from langchain.globals import set_llm_cache
-    from langchain_community.cache import InMemoryCache
-except ImportError:
-    from langchain.cache import set_llm_cache
-    from langchain.cache import InMemoryCache
+from app.services.qdrant_store import qdrant_vector_store as vector_store
 
-# Enable basic caching
-set_llm_cache(InMemoryCache())
-
-# Custom query cache
-_query_cache = {}
+# Custom cache implementation
+_query_cache: Dict[str, Dict[str, Any]] = {}
 _CACHE_TTL = 300  # 5 minutes
 
 def get_query_hash(query: str) -> str:
@@ -22,7 +14,7 @@ def get_query_hash(query: str) -> str:
     return hashlib.md5(query.encode()).hexdigest()
 
 @lru_cache(maxsize=1000)
-def cached_similarity_search(query: str, k: int = 3):
+def cached_similarity_search(query: str, k: int = 3) -> List[Any]:
     """Cache similarity search results."""
     cache_key = f"search_{get_query_hash(query)}_{k}"
     
@@ -32,7 +24,7 @@ def cached_similarity_search(query: str, k: int = 3):
         if time.time() - cached_data['timestamp'] < _CACHE_TTL:
             return cached_data['results']
     
-    # Perform search and cache results
+    # Perform search
     results = vector_store.similarity_search(query, k=k)
     _query_cache[cache_key] = {
         'timestamp': time.time(),
@@ -46,3 +38,10 @@ def clear_cache():
     global _query_cache
     _query_cache = {}
     cached_similarity_search.cache_clear()
+
+# Mock the LangChain cache functions for compatibility
+def set_llm_cache(*args, **kwargs):
+    pass
+
+class InMemoryCache:
+    pass

@@ -1,4 +1,4 @@
-# 🤖 NeuraChat - Intelligent Document Retrieval System
+# 🤖 NeuraChat - AI Assistant
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)](https://fastapi.tiangolo.com)
