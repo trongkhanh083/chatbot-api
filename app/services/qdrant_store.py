@@ -30,10 +30,26 @@ def get_qdrant_client():
         print(f"❌ Qdrant client connection failed: {e}")
         raise
 
+def ensure_qdrant_indexes(client, collection_name):
+    """Ensure filterable indexes exist for required fields."""
+    index_fields = ["department", "doc_type"]
+    for field in index_fields:
+        try:
+            client.create_payload_index(
+                collection_name=collection_name,
+                field_name=field,
+                field_schema={"type": "keyword"}
+            )
+            print(f"✅ Ensured index for '{field}'")
+        except Exception as e:
+            print(f"⚠️ Could not create index for '{field}': {e}")
+
 def get_qdrant_vector_store():
     """Get Qdrant vector store for queries"""
     try:
         client = get_qdrant_client()
+        # Ensure indexes for filterable fields
+        ensure_qdrant_indexes(client, QDRANT_COLLECTION_NAME)
         
         vector_store = QdrantVectorStore(
             client=client,

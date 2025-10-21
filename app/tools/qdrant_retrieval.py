@@ -124,7 +124,7 @@ def enhanced_retrieval(query: str, filters: dict = None, k: int = 5, return_form
         return []
 
 @tool
-def retrieve_with_filters(query: str, department: str = None, doc_type: str = None, year: int = None):
+def retrieve_with_filters(query: str, department: str = None, doc_type: str = None):
     """Retrieve information with metadata filtering."""
     start_time = time.time()
     
@@ -135,11 +135,9 @@ def retrieve_with_filters(query: str, department: str = None, doc_type: str = No
             filters["department"] = department
         if doc_type and doc_type.lower() != "any":
             filters["doc_type"] = doc_type
-        if year:
-            filters["year"] = year
-        
+
         # Perform filtered search
-        retrieved_docs = enhanced_retrieval(query, filters=filters, k=3)
+        retrieved_docs = enhanced_retrieval(query, filters=filters, k=3, return_formatted=False)
         
         if not retrieved_docs:
             return "No relevant information found with the specified filters."

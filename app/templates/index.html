@@ -938,12 +938,12 @@
             const query = prompt('Enter search query:') || 'neural networks';
             const department = departmentSelect.value;
             const docType = docTypeSelect.value;
-
-            const requestData = { query };
-            if (department) requestData.department = department;
-            if (docType) requestData.doc_type = docType;
             
-            await testRetrievalEndpoint('/retrieval/filter', { requestData }, 'Filtered Retrieval');
+            await testRetrievalEndpoint('/retrieval/filter', { 
+                query, 
+                department: department || null,
+                doc_type: docType || null
+            }, 'Filtered Retrieval');
         }
 
         async function testEnhancedRetrieval() {

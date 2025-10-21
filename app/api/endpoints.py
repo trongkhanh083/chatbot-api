@@ -85,8 +85,7 @@ async def test_filtered_retrieval(request: FilteredRetrievalRequest):
         results = retrieve_with_filters.invoke({
             "query": request.query,
             "department": request.department,
-            "doc_type": request.doc_type,
-            "year": request.year
+            "doc_type": request.doc_type
         })
         
         return {
@@ -94,8 +93,7 @@ async def test_filtered_retrieval(request: FilteredRetrievalRequest):
             "query": request.query,
             "filters": {
                 "department": request.department,
-                "doc_type": request.doc_type,
-                "year": request.year
+                "doc_type": request.doc_type
             },
             "results": results,
             "retrieval_type": "qdrant_filtered"
@@ -107,8 +105,7 @@ async def test_filtered_retrieval(request: FilteredRetrievalRequest):
             "query": request.query,
             "filters": {
                 "department": request.department,
-                "doc_type": request.doc_type,
-                "year": request.year
+                "doc_type": request.doc_type
             },
             "retrieval_type": "qdrant_filtered"
         }

@@ -1,4 +1,4 @@
-# 🤖 NeuraChat - Intelligent Document Retrieval System
+# 🤖 NeuraSearch AI - Intelligent Document Retrieval System
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)](https://fastapi.tiangolo.com)
@@ -7,7 +7,7 @@
 
 A sophisticated AI-powered chatbot with advanced document retrieval capabilities using Qdrant vector search and Mistral AI.
 
-![NeuraChat Demo](data/demo.png)
+![NeuraSearch AI Demo](data/demo.png)
 
 ## ✨ Features
 
