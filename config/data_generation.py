@@ -185,18 +185,6 @@ def save_documents_to_data_folder(documents, format_type="json"):
             json.dump(documents, f, indent=2, ensure_ascii=False)
         print(f"✅ Saved {len(documents)} documents to {filename}")
         return filename
-    
-    elif format_type == "txt":
-        filename = os.path.join(data_folder, f"docs_{timestamp}.txt")
-        with open(filename, 'w', encoding='-8') as f:
-            for i, doc in enumerate(documents):
-                f.write(f"=== Document {i+1} ===\n")
-                f.write(f"Title: {doc['metadata']['title']}\n")
-                f.write(f"Content: {doc['content'][:300]}...\n")
-                f.write(f"Metadata: {doc['metadata']}\n")
-                f.write("-" * 80 + "\n\n")
-        print(f"✅ Saved summary to {filename}")
-        return filename
 
 def generate_more_documents(target_count=100):
     """Generate additional documents if we need more"""

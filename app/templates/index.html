@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 NeuraSearch AI</title>
+    <title>NeuraChat</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         :root {
             --primary-color: #6366f1;
@@ -575,23 +576,23 @@
         <header class="header">
             <div class="logo">
                 <div class="logo-icon">🧠</div>
-                <span>NeuraSearch AI</span>
+                <span>NeuraChat</span>
             </div>
             <div class="status-indicator">
                 <div class="status-dot"></div>
-                <span>System Online</span>
+                <span>Online</span>
             </div>
         </header>
 
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-section">
-                <h3>Conversation Threads</h3>
+                <h3>Chat Threads</h3>
                 <div class="thread-item active">
                     <div class="thread-icon">💬</div>
                     <div>
-                        <div class="font-semibold">Current Session</div>
-                        <div class="text-xs text-light" id="currentThreadDisplay">thread_1738412345</div>
+                        <div class="font-semibold">Current</div>
+                        <div class="text-xs text-light">Just now</div>
                     </div>
                 </div>
                 <div class="thread-item">
@@ -642,9 +643,9 @@
                         <div class="message-bubble">
                             <div class="message-header">
                                 <span>🤖</span>
-                                <span>NeuraSearch AI</span>
+                                <span>NeuraChat</span>
                             </div>
-                            Welcome to NeuraSearch AI! I'm here to help you find information and answer questions using our intelligent document retrieval system.
+                            Welcome to NeuraChat! I'm here to help you find information and answer questions using our intelligent document retrieval system.
                             <div class="message-time">Just now</div>
                         </div>
                     </div>
@@ -655,7 +656,7 @@
                         <textarea 
                             class="message-input" 
                             id="message" 
-                            placeholder="Ask me anything..."
+                            placeholder="Ask anything"
                             rows="1"
                         ></textarea>
                         <button class="send-btn" id="send-btn" onclick="sendMessage()">
@@ -779,7 +780,7 @@
                     <div class="message-bubble">
                         <div class="message-header">
                             <span>🤖</span>
-                            <span>NeuraSearch AI</span>
+                            <span>NeuraChat</span>
                         </div>
                         Started new conversation thread. How can I help you today?
                         <div class="message-time">Just now</div>
@@ -818,7 +819,7 @@
                 <div class="message-bubble">
                     <div class="message-header">
                         <span>${sender === 'user' ? '👤' : '🤖'}</span>
-                        <span>${sender === 'user' ? 'You' : 'NeuraSearch AI'}</span>
+                        <span>${sender === 'user' ? 'You' : 'NeuraChat'}</span>
                     </div>
                     ${formatMessage(text)}
                     <div class="message-time">${timestamp}</div>
@@ -914,7 +915,7 @@
                             <div class="message-bubble">
                                 <div class="message-header">
                                     <span>🤖</span>
-                                    <span>NeuraSearch AI</span>
+                                    <span>NeuraChat</span>
                                 </div>
                                 Conversation history cleared. How can I help you?
                                 <div class="message-time">Just now</div>
