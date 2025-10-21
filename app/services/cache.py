@@ -1,9 +1,14 @@
-from langchain_community.cache import InMemoryCache
-from langchain.globals import set_llm_cache
 from app.services.qdrant_store import qdrant_vector_store as vector_store
 from functools import lru_cache
 import hashlib
 import time
+
+try:
+    from langchain.globals import set_llm_cache
+    from langchain_community.cache import InMemoryCache
+except ImportError:
+    from langchain.cache import set_llm_cache
+    from langchain.cache import InMemoryCache
 
 # Enable basic caching
 set_llm_cache(InMemoryCache())

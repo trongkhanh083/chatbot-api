@@ -745,7 +745,7 @@
     </div>
 
     <script>
-        const API_BASE = 'https://chatbot-api-s403.onrender.com';
+        const API_BASE = '';
         
         // DOM elements
         const chatbox = document.getElementById('chatbox');
@@ -755,7 +755,6 @@
         const departmentSelect = document.getElementById('department');
         const docTypeSelect = document.getElementById('docType');
         const threadIdDisplay = document.getElementById('threadIdDisplay');
-        const currentThreadDisplay = document.getElementById('currentThreadDisplay');
         const toolsPanel = document.getElementById('toolsPanel');
 
         // Initialize
@@ -769,7 +768,6 @@
         function generateThreadId() {
             const threadId = 'thread_' + Date.now();
             threadIdDisplay.textContent = threadId;
-            currentThreadDisplay.textContent = threadId;
             return threadId;
         }
 
